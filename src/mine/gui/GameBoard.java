@@ -15,6 +15,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
@@ -29,7 +30,7 @@ public class GameBoard {
 	
 	public GameBoard(final Cell[][] cellArray) {
 		final JFrame frame = new JFrame();
-		frame.setSize(50 * MineUtil.MAP_SIZE, 50 * MineUtil.MAP_SIZE);
+		frame.setSize(50 * MineUtil.MAP_SIZE_X, 50 * MineUtil.MAP_SIZE_Y);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);
 		frame.setLocation(MineUtil.WINDOW_LOCATION_X, MineUtil.WINDOW_LOCATION_Y);
@@ -52,17 +53,25 @@ public class GameBoard {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				final JFrame popUp = new JFrame();
-				popUp.setSize(200,  200);
+				popUp.setSize(300,  200);
 				popUp.setLocation(600, 300);
 				popUp.setResizable(false);
-				popUp.setLayout(new GridLayout(3, 1));
+				popUp.setLayout(new GridLayout(4, 1));
 				
 				JPanel pane = new JPanel();
-				JLabel label = new JLabel("棋盤邊長:");
-				final JTextField mapSizeInput = new JTextField(Integer.toString(MineUtil.MAP_SIZE));
-				mapSizeInput.setColumns(10);
+				JLabel label = new JLabel("棋盤邊長 (x):");
+				final JTextField mapSizeXInput = new JTextField(Integer.toString(MineUtil.MAP_SIZE_X));
+				mapSizeXInput.setColumns(10);
 				pane.add(label);
-				pane.add(mapSizeInput);
+				pane.add(mapSizeXInput);
+				popUp.add(pane);
+				
+				pane = new JPanel();
+				label = new JLabel("棋盤邊長 (y):");
+				final JTextField mapSizeYInput = new JTextField(Integer.toString(MineUtil.MAP_SIZE_Y));
+				mapSizeYInput.setColumns(10);
+				pane.add(label);
+				pane.add(mapSizeYInput);
 				popUp.add(pane);
 				
 				pane = new JPanel();
@@ -80,14 +89,18 @@ public class GameBoard {
 					@Override
 					public void actionPerformed(ActionEvent event) {
 						try {
-							int newMapSize = Integer.parseInt(mapSizeInput.getText());
+							int newMapSizeX = Integer.parseInt(mapSizeXInput.getText());
+							int newMapSizeY = Integer.parseInt(mapSizeYInput.getText());
 							int newMineNum = Integer.parseInt(mineNumInput.getText());
-							if (newMapSize <= 0 || newMineNum <= 0) {
+							if (newMapSizeX <= 0 || newMapSizeY < 0 || newMineNum <= 0) {
 								JOptionPane.showMessageDialog(popUp, "請輸入大於0的數字.");
-							} else if (newMineNum >= newMapSize * newMapSize) {
+							} else if (newMineNum >= newMapSizeX * newMapSizeY) {
 								JOptionPane.showMessageDialog(popUp, "地雷數量請勿大於棋盤大小.");
+							} else if (newMapSizeX > 100 || newMapSizeY > 100) {
+								JOptionPane.showMessageDialog(popUp, "地圖設定這麼大的話你也看不到字, 還是算了吧...");
 							} else {
-								MineUtil.MAP_SIZE = newMapSize;
+								MineUtil.MAP_SIZE_X = newMapSizeX;
+								MineUtil.MAP_SIZE_Y = newMapSizeY;
 								MineUtil.MINE_NUM = newMineNum;
 								popUp.dispose();
 								
@@ -95,6 +108,7 @@ public class GameBoard {
 							}
 						} catch (Exception e) {
 							JOptionPane.showMessageDialog(popUp, "請輸入整數.");
+							e.printStackTrace();
 						}
 					}
 					
@@ -122,10 +136,10 @@ public class GameBoard {
 		
 		// set game board
 		JPanel arrayView = new JPanel();
-		arrayView.setLayout(new GridLayout(MineUtil.MAP_SIZE, MineUtil.MAP_SIZE));
-		final JButton[][] buttonList = new JButton[MineUtil.MAP_SIZE][MineUtil.MAP_SIZE];
-		for (int i = 0; i < MineUtil.MAP_SIZE; i++) {
-			for (int j = 0; j < MineUtil.MAP_SIZE; j++) {
+		arrayView.setLayout(new GridLayout(MineUtil.MAP_SIZE_Y, MineUtil.MAP_SIZE_X));
+		final JButton[][] buttonList = new JButton[MineUtil.MAP_SIZE_X][MineUtil.MAP_SIZE_Y];
+		for (int i = 0; i < MineUtil.MAP_SIZE_Y; i++) {
+			for (int j = 0; j < MineUtil.MAP_SIZE_X; j++) {
 				final int x = j;
 				final int y = i;
 				final JButton b = new JButton();
@@ -139,11 +153,11 @@ public class GameBoard {
 								try {
 									MineUtil.openCell(cellArray, x, y);
 								} catch (ExplodeException e) {
-									JOptionPane.showMessageDialog(frame, "Mine Exploded, game over!");
+									JOptionPane.showMessageDialog(frame, "很不幸的, 你踩到地雷了! Game Over~");
 									MineUtil.openAllCells(cellArray);
 									done = true;
 								} catch (GameClearException e) {
-									JOptionPane.showMessageDialog(frame, "Congratulations! You won!");
+									JOptionPane.showMessageDialog(frame, "恭喜, 你贏了!");
 									done = true;
 								}
 								b.setEnabled(false);
@@ -184,13 +198,14 @@ public class GameBoard {
 				buttonList[j][i] = b;
 			}
 		}
-		frame.add(arrayView);
+		JScrollPane scrollPane = new JScrollPane(arrayView);
+		frame.add(scrollPane);
 		
 		frame.setVisible(true);
 	}
 	
 	private static void updateGameBoard(Cell[][] cellArray, JButton[][] buttonList){
-		for (int i = 0; i < buttonList.length; i++) {
+		for (int i = 0; i < buttonList[0].length; i++) {
 			for (int j = 0; j < buttonList.length; j++) {
 				if (cellArray[j + 1][i + 1].getStatus() == CellStatus.CLOSED) {
 					buttonList[j][i].setText("*");
@@ -213,7 +228,7 @@ public class GameBoard {
 	}
 	
 	private static void disableAllButtons(JButton[][] buttonList){
-		for (int i = 0; i < buttonList.length; i++) {
+		for (int i = 0; i < buttonList[0].length; i++) {
 			for (int j = 0; j < buttonList.length; j++) {
 				buttonList[j][i].setEnabled(false);
 			}

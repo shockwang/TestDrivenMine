@@ -20,7 +20,7 @@ public class GameBoardTest {
 	
 	@Test
 	public void generateMineTest() {
-		Set<Point> mineSet = MineUtil.genMine(10, 9);
+		Set<Point> mineSet = MineUtil.genMine(10, 9, 9);
 		assertEquals(mineSet.size(), 10);
 		for (Point p : mineSet) {
 			System.out.println("x=" + p.x + ", " + "y=" + p.y);
@@ -29,21 +29,21 @@ public class GameBoardTest {
 		}
 		System.out.println();
 		
-		mineSet = MineUtil.genMine(15, 13);
+		mineSet = MineUtil.genMine(15, 13, 12);
 		assertEquals(mineSet.size(), 15);
 		for (Point p : mineSet) {
 			System.out.println("x=" + p.x + ", " + "y=" + p.y);
 			assertTrue(p.x < 13);
-			assertTrue(p.y < 13);
+			assertTrue(p.y < 12);
 		}
 		System.out.println();
 		
-		mineSet = MineUtil.genMine(50, 25);
+		mineSet = MineUtil.genMine(50, 25, 30);
 		assertEquals(mineSet.size(), 50);
 		for (Point p : mineSet) {
 			System.out.println("x=" + p.x + ", " + "y=" + p.y);
 			assertTrue(p.x < 25);
-			assertTrue(p.y < 25);
+			assertTrue(p.y < 30);
 		}
 		System.out.println();
 	}
@@ -58,7 +58,7 @@ public class GameBoardTest {
 		Set<Point> mineSet = new HashSet<Point>();
 		mineSet.add(new Point(0, 0));
 		mineSet.add(new Point(1, 2));
-		Cell[][] cellArray = MineUtil.genMap(mineSet, 3);
+		Cell[][] cellArray = MineUtil.genMap(mineSet, 3, 3);
 		calculateHintTestHelper(cellArray, board);
 		
 		board = new int[][]{
@@ -70,7 +70,7 @@ public class GameBoardTest {
 		mineSet.add(new Point(0, 0));
 		mineSet.add(new Point(1, 1));
 		mineSet.add(new Point(2, 2));
-		cellArray = MineUtil.genMap(mineSet, 3);
+		cellArray = MineUtil.genMap(mineSet, 3, 3);
 		calculateHintTestHelper(cellArray, board);
 		
 		board = new int[][]{
@@ -82,7 +82,7 @@ public class GameBoardTest {
 		mineSet.add(new Point(0, 0));
 		mineSet.add(new Point(1, 0));
 		mineSet.add(new Point(2, 0));
-		cellArray = MineUtil.genMap(mineSet, 3);
+		cellArray = MineUtil.genMap(mineSet, 3, 3);
 		calculateHintTestHelper(cellArray, board);
 		
 		board = new int[][]{
@@ -102,7 +102,7 @@ public class GameBoardTest {
 		mineSet.add(new Point(1, 4));
 		mineSet.add(new Point(2, 4));
 		mineSet.add(new Point(3, 4));
-		cellArray = MineUtil.genMap(mineSet, 5);
+		cellArray = MineUtil.genMap(mineSet, 5, 5);
 		calculateHintTestHelper(cellArray, board);
 		
 		board = new int[][]{
@@ -121,7 +121,7 @@ public class GameBoardTest {
 		mineSet.add(new Point(1, 3));
 		mineSet.add(new Point(2, 3));
 		mineSet.add(new Point(3, 3));
-		cellArray = MineUtil.genMap(mineSet, 5);
+		cellArray = MineUtil.genMap(mineSet, 5, 5);
 		calculateHintTestHelper(cellArray, board);
 	}
 	
@@ -147,7 +147,7 @@ public class GameBoardTest {
 		mineSet.add(new Point(0, 0));
 		mineSet.add(new Point(1, 0));
 		mineSet.add(new Point(2, 0));
-		Cell[][] cellArray = MineUtil.genMap(mineSet, 3);
+		Cell[][] cellArray = MineUtil.genMap(mineSet, 3, 3);
 		
 		int[][] checkBoard = new int[][]{
 				{0, 0, 0},
@@ -171,7 +171,7 @@ public class GameBoardTest {
 		mineSet.add(new Point(4, 4));
 		mineSet.add(new Point(3, 2));
 		mineSet.add(new Point(2, 2));
-		cellArray = MineUtil.genMap(mineSet, 5);
+		cellArray = MineUtil.genMap(mineSet, 5, 5);
 		checkBoard = new int[][]{
 				{1, 1, 1, 1, 0},
 				{1, 1, 1, 1, 0},
@@ -203,7 +203,7 @@ public class GameBoardTest {
 		mineSet.add(new Point(2, 2));
 		mineSet.add(new Point(3, 2));
 		mineSet.add(new Point(4, 2));
-		cellArray = MineUtil.genMap(mineSet, 5);
+		cellArray = MineUtil.genMap(mineSet, 5, 5);
 		checkBoard = new int[][]{
 				{0, 0, 0, 0, 0},
 				{0, 0, 0, 0, 0},
@@ -238,7 +238,7 @@ public class GameBoardTest {
 	public void checkGameClearTest() {
 		Set<Point> mineSet = new HashSet<Point>();
 		mineSet.add(new Point(0, 0));
-		Cell[][] cellArray = MineUtil.genMap(mineSet, 2);
+		Cell[][] cellArray = MineUtil.genMap(mineSet, 2, 2);
 		try {
 			cellArray = MineUtil.openCell(cellArray, 1, 0);
 			cellArray = MineUtil.openCell(cellArray, 0, 1);
