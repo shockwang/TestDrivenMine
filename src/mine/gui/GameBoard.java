@@ -92,7 +92,7 @@ public class GameBoard {
 							int newMapSizeX = Integer.parseInt(mapSizeXInput.getText());
 							int newMapSizeY = Integer.parseInt(mapSizeYInput.getText());
 							int newMineNum = Integer.parseInt(mineNumInput.getText());
-							if (newMapSizeX <= 0 || newMapSizeY < 0 || newMineNum <= 0) {
+							if (newMapSizeX <= 0 || newMapSizeY <= 0 || newMineNum <= 0) {
 								JOptionPane.showMessageDialog(popUp, "請輸入大於0的數字.");
 							} else if (newMineNum >= newMapSizeX * newMapSizeY) {
 								JOptionPane.showMessageDialog(popUp, "地雷數量請勿大於棋盤大小.");
