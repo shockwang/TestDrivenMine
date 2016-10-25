@@ -32,7 +32,7 @@ public class GameBoard {
 		frame.setSize(50 * MineUtil.MAP_SIZE, 50 * MineUtil.MAP_SIZE);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);
-		frame.setLocation(600, 300);
+		frame.setLocation(MineUtil.WINDOW_LOCATION_X, MineUtil.WINDOW_LOCATION_Y);
 		
 		// set menu bar
 		JMenuBar menuBar = new JMenuBar();
@@ -42,9 +42,7 @@ public class GameBoard {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Cell[][] newCellArray = MineUtil.genNewGame();
-				frame.dispose();
-				new GameBoard(newCellArray);
+				startNewGame(frame);
 			}
 		});
 		menu.add(menuItem);
@@ -93,10 +91,7 @@ public class GameBoard {
 								MineUtil.MINE_NUM = newMineNum;
 								popUp.dispose();
 								
-								// start a new game
-								Cell[][] newCellArray = MineUtil.genNewGame();
-								frame.dispose();
-								new GameBoard(newCellArray);
+								startNewGame(frame);
 							}
 						} catch (Exception e) {
 							JOptionPane.showMessageDialog(popUp, "請輸入整數.");
@@ -223,5 +218,13 @@ public class GameBoard {
 				buttonList[j][i].setEnabled(false);
 			}
 		}
+	}
+	
+	private static void startNewGame(JFrame nowFrame) {
+		Cell[][] newCellArray = MineUtil.genNewGame();
+		MineUtil.WINDOW_LOCATION_X = nowFrame.getX();
+		MineUtil.WINDOW_LOCATION_Y = nowFrame.getY();
+		nowFrame.dispose();
+		new GameBoard(newCellArray);
 	}
 }

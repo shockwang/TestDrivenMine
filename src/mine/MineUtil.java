@@ -14,6 +14,8 @@ import mine.exception.GameClearException;
 public class MineUtil {
 	public static int MINE_NUM = 10;
 	public static int MAP_SIZE = 9;
+	public static int WINDOW_LOCATION_X = 600;
+	public static int WINDOW_LOCATION_Y = 300;
 	
 	public static Set<Point> genMine(int mineNum, int mapSize) {
 		Set<Point> mineSet = new HashSet<Point>();
