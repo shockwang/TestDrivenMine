@@ -27,8 +27,8 @@ import mine.exception.GameClearException;
 
 public class GameBoard {
 	
-	public GameBoard(Cell[][] cellArray) {
-		JFrame frame = new JFrame();
+	public GameBoard(final Cell[][] cellArray) {
+		final JFrame frame = new JFrame();
 		frame.setSize(50 * MineUtil.MAP_SIZE, 50 * MineUtil.MAP_SIZE);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);
@@ -53,7 +53,7 @@ public class GameBoard {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JFrame popUp = new JFrame();
+				final JFrame popUp = new JFrame();
 				popUp.setSize(200,  200);
 				popUp.setLocation(600, 300);
 				popUp.setResizable(false);
@@ -61,7 +61,7 @@ public class GameBoard {
 				
 				JPanel pane = new JPanel();
 				JLabel label = new JLabel("棋盤邊長:");
-				JTextField mapSizeInput = new JTextField(Integer.toString(MineUtil.MAP_SIZE));
+				final JTextField mapSizeInput = new JTextField(Integer.toString(MineUtil.MAP_SIZE));
 				mapSizeInput.setColumns(10);
 				pane.add(label);
 				pane.add(mapSizeInput);
@@ -69,7 +69,7 @@ public class GameBoard {
 				
 				pane = new JPanel();
 				label = new JLabel("地雷數量:");
-				JTextField mineNumInput = new JTextField(Integer.toString(MineUtil.MINE_NUM));
+				final JTextField mineNumInput = new JTextField(Integer.toString(MineUtil.MINE_NUM));
 				mineNumInput.setColumns(10);
 				pane.add(label);
 				pane.add(mineNumInput);
@@ -128,12 +128,12 @@ public class GameBoard {
 		// set game board
 		JPanel arrayView = new JPanel();
 		arrayView.setLayout(new GridLayout(MineUtil.MAP_SIZE, MineUtil.MAP_SIZE));
-		JButton[][] buttonList = new JButton[MineUtil.MAP_SIZE][MineUtil.MAP_SIZE];
+		final JButton[][] buttonList = new JButton[MineUtil.MAP_SIZE][MineUtil.MAP_SIZE];
 		for (int i = 0; i < MineUtil.MAP_SIZE; i++) {
 			for (int j = 0; j < MineUtil.MAP_SIZE; j++) {
 				final int x = j;
 				final int y = i;
-				JButton b = new JButton();
+				final JButton b = new JButton();
 				b.addMouseListener(new MouseListener(){
 
 					@Override
