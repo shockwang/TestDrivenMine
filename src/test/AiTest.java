@@ -31,11 +31,11 @@ public class AiTest {
 		try {
 			cellArray = MineUtil.openCell(cellArray, 3, 0);
 			AiUtil.updateAiCell(cellArray);
-			cellArray = AiUtil.takeNextStep(cellArray);
-			cellArray = AiUtil.takeNextStep(cellArray);
-			cellArray = AiUtil.takeNextStep(cellArray);
-			cellArray = AiUtil.takeNextStep(cellArray);
-			cellArray = AiUtil.takeNextStep(cellArray);
+			AiUtil.takeNextStep(cellArray);
+			AiUtil.takeNextStep(cellArray);
+			AiUtil.takeNextStep(cellArray);
+			AiUtil.takeNextStep(cellArray);
+			AiUtil.takeNextStep(cellArray);
 			assertEquals(CellStatus.FLAGGED, cellArray[0][0].getStatus());
 			assertEquals(CellStatus.FLAGGED, cellArray[4][2].getStatus());
 			assertEquals(CellStatus.FLAGGED, cellArray[3][3].getStatus());
@@ -61,7 +61,7 @@ public class AiTest {
 			cellArray = MineUtil.openCell(cellArray, 0, 3);
 			AiUtil.updateAiCell(cellArray);
 			
-			cellArray = AiUtil.takeNextStep(cellArray);
+			AiUtil.takeNextStep(cellArray);
 			assertEquals(CellStatus.OPENED, cellArray[3][3].getStatus());
 		} catch (ExplodeException | GameClearException e) {
 			fail();
@@ -70,9 +70,9 @@ public class AiTest {
 	
 	@Test
 	public void randomTest() {
-		int mapSizeX = 16;
+		int mapSizeX = 30;
 		int mapSizeY = 16;
-		int mineNum = 40;
+		int mineNum = 99;
 		
 		int gameCount = 0;
 		int win = 0;

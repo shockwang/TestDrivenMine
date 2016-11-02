@@ -23,6 +23,7 @@ import mine.Cell;
 import mine.Cell.CellStatus;
 import mine.Cell.CellType;
 import mine.MineUtil;
+import mine.ai.AiThread;
 import mine.exception.ExplodeException;
 import mine.exception.GameClearException;
 
@@ -132,12 +133,29 @@ public class GameBoard {
 		});
 		menu.add(menuItem);
 		menuBar.add(menu);
+		
+		// declare here for AI access
+		final JButton[][] buttonList = new JButton[MineUtil.MAP_SIZE_X][MineUtil.MAP_SIZE_Y];
+		
+		// AI menu
+		menu = new JMenu("AI");
+		menuItem = new JMenuItem("¬ÝAIª±");
+		menuItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new AiThread(cellArray, buttonList, frame).start();
+			}
+			
+		});
+		menu.add(menuItem);
+		menuBar.add(menu);
+		
 		frame.setJMenuBar(menuBar);
 		
 		// set game board
 		JPanel arrayView = new JPanel();
 		arrayView.setLayout(new GridLayout(MineUtil.MAP_SIZE_Y, MineUtil.MAP_SIZE_X));
-		final JButton[][] buttonList = new JButton[MineUtil.MAP_SIZE_X][MineUtil.MAP_SIZE_Y];
 		for (int i = 0; i < MineUtil.MAP_SIZE_Y; i++) {
 			for (int j = 0; j < MineUtil.MAP_SIZE_X; j++) {
 				final int x = j;
@@ -204,7 +222,7 @@ public class GameBoard {
 		frame.setVisible(true);
 	}
 	
-	private static void updateGameBoard(Cell[][] cellArray, JButton[][] buttonList){
+	public static void updateGameBoard(Cell[][] cellArray, JButton[][] buttonList){
 		for (int i = 0; i < buttonList[0].length; i++) {
 			for (int j = 0; j < buttonList.length; j++) {
 				if (cellArray[j + 1][i + 1].getStatus() == CellStatus.CLOSED) {
@@ -227,7 +245,7 @@ public class GameBoard {
 		}
 	}
 	
-	private static void disableAllButtons(JButton[][] buttonList){
+	public static void disableAllButtons(JButton[][] buttonList){
 		for (int i = 0; i < buttonList[0].length; i++) {
 			for (int j = 0; j < buttonList.length; j++) {
 				buttonList[j][i].setEnabled(false);

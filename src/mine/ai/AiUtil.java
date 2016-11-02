@@ -1,5 +1,6 @@
 package mine.ai;
 
+import java.awt.Point;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Random;
@@ -27,7 +28,7 @@ public class AiUtil {
 		}
 	}
 	
-	public static Cell[][] takeNextStep(Cell[][] cellArray) throws ExplodeException, GameClearException {
+	public static Point takeNextStep(Cell[][] cellArray) throws ExplodeException, GameClearException {
 		AiCell target = null;
 		
 		if (!actionList.isEmpty()) {
@@ -48,7 +49,10 @@ public class AiUtil {
 			target = worthTry;
 			worthTry = null;
 		} else {
-			target = randomClick();
+			target = clickOnCorner();
+			if (target == null) {
+				target = randomClick();
+			}
 			/*System.out.println("random click");
 			System.out.println(String.format("x: %d, y: %d", target.getRelatedCell().getX() - 1, 
 					target.getRelatedCell().getY() - 1));*/
@@ -57,7 +61,23 @@ public class AiUtil {
 		}
 		//System.out.println("updated");
 		updateAiCell(cellArray);
-		return cellArray;
+		return new Point(target.getRelatedCell().getX() - 1, target.getRelatedCell().getY() - 1);
+	}
+	
+	private static AiCell clickOnCorner() {
+		AiCell target = null;
+		if (aiCellArray[0][0].getRelatedCell().getStatus() == CellStatus.CLOSED) {
+			target = aiCellArray[0][0];
+		} else if (aiCellArray[0][aiCellArray[0].length - 1].getRelatedCell().getStatus() == CellStatus.CLOSED) {
+			target = aiCellArray[0][aiCellArray[0].length - 1];
+		} else if (aiCellArray[aiCellArray.length - 1][0].getRelatedCell().getStatus() == CellStatus.CLOSED) {
+			target = aiCellArray[aiCellArray.length - 1][0];
+		} else if (aiCellArray[aiCellArray.length - 1][aiCellArray[0].length - 1].getRelatedCell().getStatus() 
+				== CellStatus.CLOSED) {
+			target = aiCellArray[aiCellArray.length - 1][aiCellArray[0].length - 1];
+		}
+		
+		return target;
 	}
 	
 	private static AiCell randomClick() {
