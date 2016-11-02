@@ -28,6 +28,7 @@ import mine.exception.ExplodeException;
 import mine.exception.GameClearException;
 
 public class GameBoard {
+	private AiThread aiThread = null;
 	
 	public GameBoard(final Cell[][] cellArray) {
 		final JFrame frame = new JFrame();
@@ -44,7 +45,7 @@ public class GameBoard {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				startNewGame(frame);
+				startNewGame(frame, aiThread);
 			}
 		});
 		menu.add(menuItem);
@@ -105,7 +106,7 @@ public class GameBoard {
 								MineUtil.MINE_NUM = newMineNum;
 								popUp.dispose();
 								
-								startNewGame(frame);
+								startNewGame(frame, aiThread);
 							}
 						} catch (Exception e) {
 							JOptionPane.showMessageDialog(popUp, "請輸入整數.");
@@ -144,7 +145,12 @@ public class GameBoard {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new AiThread(cellArray, buttonList, frame).start();
+				if (aiThread == null) {
+					aiThread = new AiThread(cellArray, buttonList, frame);
+					aiThread.start();
+				} else {
+					JOptionPane.showMessageDialog(frame, "AI正在玩呢.");
+				}
 			}
 			
 		});
@@ -253,11 +259,15 @@ public class GameBoard {
 		}
 	}
 	
-	private static void startNewGame(JFrame nowFrame) {
+	private static void startNewGame(JFrame nowFrame, AiThread aiThread) {
 		Cell[][] newCellArray = MineUtil.genNewGame();
 		MineUtil.WINDOW_LOCATION_X = nowFrame.getX();
 		MineUtil.WINDOW_LOCATION_Y = nowFrame.getY();
 		nowFrame.dispose();
+		if (aiThread != null) {
+			aiThread.getSolveGame().set(false);
+			aiThread = null;
+		}
 		new GameBoard(newCellArray);
 	}
 }

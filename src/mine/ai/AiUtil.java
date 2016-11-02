@@ -20,6 +20,7 @@ public class AiUtil {
 	private static AiCell worthTry = null;
 	
 	public static void initAiCellArray(Cell[][] cellArray) {
+		actionList.clear();
 		aiCellArray = new AiCell[cellArray.length - 2][cellArray[0].length - 2];
 		for (int i = 0; i < aiCellArray.length; i++) {
 			for (int j = 0; j < aiCellArray[0].length; j++) {

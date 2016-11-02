@@ -70,9 +70,9 @@ public class AiTest {
 	
 	@Test
 	public void randomTest() {
-		int mapSizeX = 30;
+		int mapSizeX = 16;
 		int mapSizeY = 16;
-		int mineNum = 99;
+		int mineNum = 40;
 		
 		int gameCount = 0;
 		int win = 0;

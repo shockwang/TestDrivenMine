@@ -1,6 +1,7 @@
 package mine.ai;
 
 import java.awt.event.MouseListener;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -16,11 +17,13 @@ public class AiThread extends Thread {
 	private Cell[][] cellArray;
 	private JButton[][] buttonList;
 	private JFrame frame;
+	private AtomicBoolean solveGame;
 	
 	public AiThread(Cell[][] cellArray, JButton[][] buttonList, JFrame frame) {
 		this.cellArray = cellArray;
 		this.buttonList = buttonList;
 		this.frame = frame;
+		this.solveGame = new AtomicBoolean(true);
 	}
 	
 	@Override
@@ -38,7 +41,7 @@ public class AiThread extends Thread {
 		AiUtil.initAiCellArray(cellArray);
 		AiUtil.updateAiCell(cellArray);
 		
-		while (true) {
+		while (this.solveGame.get()) {
 			try {
 				AiUtil.takeNextStep(cellArray);
 				GameBoard.updateGameBoard(cellArray, buttonList);
@@ -56,5 +59,9 @@ public class AiThread extends Thread {
 		}
 		GameBoard.updateGameBoard(cellArray, buttonList);
 		GameBoard.disableAllButtons(this.buttonList);
+	}
+	
+	public AtomicBoolean getSolveGame() {
+		return this.solveGame;
 	}
 }
